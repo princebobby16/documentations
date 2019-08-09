@@ -1,0 +1,457 @@
+openapi: 3.0.0
+info:
+  description: This is the documentation for the "WAY" API. It controls user registration, login, user relationships and user preference.
+  version: 1.0.0
+  title: WAY - API Documentation
+  contact:
+    email: aknanayaw77@gmail.com
+tags:
+  - name: health-check
+    description: ""
+    externalDocs:
+      description: ""
+      url: ""
+  - name: users
+    description: ""
+    externalDocs:
+      description: ""
+      url: ""
+  - name: contact
+    description: ""
+    externalDocs:
+      description: ""
+      url: ""
+security:
+  - bearerAuth: []
+paths:
+  /:
+    get:
+      tags:
+        - health-check
+      summary: ""
+      description: ""
+      operationId: health-check
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AliveResponse"
+        500:
+          description: internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AliveErrorResponse"
+  /users:
+    post:
+      tags:
+        - users
+      summary: ""
+      description: ""
+      operationId: createUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateUserRequest"
+        required: true
+      responses:
+        201:
+          description: user created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CreateUserSuccessResponse"
+        400:
+          description: invalid data provided
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CreateUserFailResponse"
+        500:
+          description: internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CreateUserErrorResponse"
+  /users/{user_id}/pins:
+    get:
+      tags:
+        - users
+      summary: ""
+      description: ""
+      operationId: requestPin
+      parameters:
+        - in: path
+          name: user_id
+          required: true
+          description: '5'
+          schema:
+            type: integer
+      responses:
+        200:
+          description: pin sent to user phone number
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RequestPinSuccessResponse"
+        400:
+          description: invalid data provided
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RequestPinFailResponse"
+        500:
+          description: internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RequestPinErrorResponse"
+  /users/{user_id}/validate:
+    put:
+      tags:
+        - users
+      summary: ""
+      description: ""
+      operationId: validateUser
+      parameters:
+        - in: path
+          name: user_id
+          required: true
+          description: '5'
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ValidateUserRequest"
+        required: true
+      responses:
+        200:
+          description: " "
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ValidateUserSuccessResponse"
+        400:
+          description: invalid data provided
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ValidateUserFailResponse"
+        500:
+          description: internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ValidateUserErrorResponse"
+  /users/login:
+    put:
+      tags:
+        - users
+      summary: ""
+      description: ""
+      operationId: login
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginRequest"
+        required: true
+      responses:
+        200:
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LoginSuccessResponse"
+        400:
+          description: invalid data provided
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LoginFailResponse"
+        403:
+          description: user not validated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LoginFailResponse"
+        500:
+          description: internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LoginErrorResponse"
+externalDocs:
+  description: Find out more
+  url: ""
+servers:
+  - url: http://localhost:9898
+components:
+  securitySchemes:
+    collections_auth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    AliveResponse:
+      type: object
+      properties:
+        alive:
+          type: string
+          example: "true"
+        author:
+          type: string
+          example: Benjy
+        email:
+          type: string
+          example: aknanayaw77@gmail.com
+        version:
+          type: string
+          example: 0.8.0
+        environament:
+          type: string
+          example: development
+    AliveErrorResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: error
+        message:
+          type: string
+          example: unable to complete request
+    CreateUserRequest:
+      type: object
+      properties:
+        last_name:
+          type: string
+          example: Landry
+        first_name:
+          type: string
+          example: Juice
+        phone_number:
+          type: string
+          example: 233275447719
+    CreateUserSuccessResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+        data:
+          type: object
+          properties:
+            id:
+              type: integer
+              example: 20
+        links:
+          type: array
+          items:
+            type: object
+            properties:
+              rel:
+                type: string
+                example: phone number
+              href:
+                type: string
+                example: http://localhost:9898/users/20/pins
+              action:
+                type: string
+                example: GET
+    CreateUserFailResponse:
+          type: object
+          properties:
+            status:
+              type: string
+              example: fail
+            data:
+              type: object
+              properties:
+                last_name: #optional
+                  type: string
+                  example: a last_name is required
+                first_name: #optional
+                  type: string
+                  example: invalid first_name
+                phone_number: #optional
+                  type: string
+                  example: invalid phone_number
+    CreateUserErrorResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: error
+        message:
+          type: string
+          example: unable to complete request
+    RequestPinSuccessResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+        data:
+          type: object
+          properties:
+            message:
+              type: string
+              example: pin sent to user phone number
+        links:
+          type: array
+          items:
+            type: object
+            properties:
+              rel:
+                type: string
+                example: new / validate
+              href:
+                type: string
+                example: http://localhost:9898/users/20/pins / http://localhost:9898/users/20/validate
+              action:
+                type: string
+                example: GET / POST
+    RequestPinFailResponse:
+          type: object
+          properties:
+            status:
+              type: string
+              example: fail
+            data:
+              type: object
+              properties:
+                id: #optional
+                  type: string
+                  example: invalid id
+    RequestPinErrorResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: error
+        message:
+          type: string
+          example: unable to complete request
+    ValidateUserRequest:
+      type: object
+      properties:
+        password:
+          type: string
+          example: secure
+        confirm_password:
+          type: string
+          example: secure
+        pin:
+          type: string
+          example: 1234
+    ValidateUserSuccessResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+        data:
+          type: object
+          properties:
+            id:
+              type: integer
+              example: 20
+        links:
+          type: array
+          items:
+            type: object
+            properties:
+              rel:
+                type: string
+                example: valid user
+              href:
+                type: string
+                example: http://localhost:9898/users/login
+              action:
+                type: string
+                example: POST
+    ValidateUserFailResponse:
+          type: object
+          properties:
+            status:
+              type: string
+              example: fail
+            data:
+              type: object
+              properties:
+                password: #optional
+                  type: string
+                  example: a password is required
+                confirm_password: #optional
+                  type: string
+                  example: passwords don't match
+                pin: #optional
+                  type: string
+                  example: invalid pin
+            links:
+              type: array
+              items:
+                type: object
+                properties:
+                  rel:
+                    type: string
+                    example: new pin
+                  href:
+                    type: string
+                    example: http://localhost:9898/users/{user_id}/pins
+                  action:
+                    type: string
+                    example: POST
+    ValidateUserErrorResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: error
+        message:
+          type: string
+          example: unable to complete request
+    LoginRequest:
+      type: object
+      properties:
+        phone_number:
+          type: string
+          example: 233275447719
+        password:
+          type: string
+          example: secure
+    LoginSuccessResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+        data:
+          type: object
+          properties:
+            authentication_token:
+              type: string
+              example: random
+    LoginFailResponse:
+          type: object
+          properties:
+            status:
+              type: string
+              example: fail
+            message:
+              type: string
+              example: phone number or password incorrect / user not validated
+    LoginErrorResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: error
+        message:
+          type: string
+          example: unable to complete request

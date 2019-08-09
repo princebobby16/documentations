@@ -1,0 +1,371 @@
+openapi: 3.0.0
+info:
+  description: This is the documentation for the "WAY" API. It controls user registration, login, user relationships and user preference.
+  version: 1.0.0
+  title: WAY - API Documentation
+  contact:
+    email: aknanayaw77@gmail.com
+tags:
+  - name: health-check
+    description: ""
+    externalDocs:
+      description: ""
+      url: ""
+  - name: incidents
+    description: ""
+    externalDocs:
+      description: ""
+      url: ""
+security:
+  - bearerAuth: []
+paths:
+  /:
+    get:
+      tags:
+        - health-check
+      summary: ""
+      description: ""
+      operationId: health-check
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AliveResponse"
+        500:
+          description: internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AliveErrorResponse"
+  /incidents:
+    post:
+      tags:
+        - incidents
+      summary: ""
+      description: ""
+      operationId: createIncident
+      requestBody:
+        content:
+          image/*:
+            schema:
+              type: string
+              format: binary
+        required: true
+      responses:
+        201:
+          description: incident created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CreateIncidentSuccessResponse"
+        400:
+          description: invalid data provided
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CreateIncidentFailResponse"
+        500:
+          description: internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CreateIncidentErrorResponse"
+    get:
+      tags:
+        - incidents
+      summary: ""
+      description: ""
+      operationId: getAllIncidents
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetAllIncidentsSuccessResponse"
+        500:
+          description: internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetAllIncidentsErrorResponse"
+  /incidents/{id}:
+    put:
+      tags:
+        - incidents
+      summary: ""
+      description: ""
+      operationId: addIncidentData
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AddIncidentDataRequest"
+        required: true
+      responses:
+        201:
+          description: incident created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AddIncidentDataSuccessResponse"
+        400:
+          description: invalid data provided
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AddIncidentDataFailResponse"
+        500:
+          description: internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AddIncidentDataErrorResponse"
+    get:
+      tags:
+        - incidents
+      summary: ""
+      description: ""
+      operationId: getOneIncident
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: '5'
+          schema:
+            type: integer
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetOneIncidentSuccessResponse"
+        400:
+          description: invalid data provided
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetOneIncidentFailResponse"
+        500:
+          description: internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetOneIncidentErrorResponse"
+externalDocs:
+  description: Find out more
+  url: ""
+servers:
+  - url: http://localhost:9898
+components:
+  securitySchemes:
+    collections_auth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    AliveResponse:
+      type: object
+      properties:
+        alive:
+          type: string
+          example: "true"
+        author:
+          type: string
+          example: Benjy
+        email:
+          type: string
+          example: aknanayaw77@gmail.com
+        version:
+          type: string
+          example: 0.8.0
+        environament:
+          type: string
+          example: development
+    AliveErrorResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: error
+        message:
+          type: string
+          example: unable to complete request
+    CreateIncidentSuccessResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+        data:
+          type: object
+          properties:
+            id:
+              type: integer
+              example: 20
+        links:
+          type: array
+          items:
+            type: object
+            properties:
+              rel:
+                type: string
+                example: meta data
+              href:
+                type: string
+                example: http://localhost:9898/incidents/20
+              action:
+                type: string
+                example: PUT
+    CreateIncidentFailResponse:
+          type: object
+          properties:
+            status:
+              type: string
+              example: fail
+            data:
+              type: object
+              properties:
+                image: #optional
+                  type: string
+                  example: file size too big
+    CreateIncidentErrorResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: error
+        message:
+          type: string
+          example: unable to complete request
+    GetAllIncidentsSuccessResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+        data:
+          type: array
+          items:
+            type: object
+            properties:
+              image:
+                type: string
+                example: http://www/image/url
+              meta_data:
+                type: object
+                properties:
+                  location:
+                    type: string
+                    example: latitude, longitude
+                  time:
+                    type: string
+                    example: 10-09-19 08:55:46
+    GetAllIncidentsErrorResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: error
+        message:
+          type: string
+          example: unable to complete request
+    AddIncidentDataRequest:
+      type: object
+      properties:
+        location:
+          type: string
+          example: latitude, longitude
+        time:
+          type: string
+          example: 10-09-19 08:55:46
+    AddIncidentDataSuccessResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+        data:
+          type: object
+          properties:
+            id:
+              type: integer
+              example: 20
+    AddIncidentDataFailResponse:
+          type: object
+          properties:
+            status:
+              type: string
+              example: fail
+            data:
+              type: object
+              properties:
+                location: #optional
+                  type: string
+                  example: invalid location
+                time: #optional
+                  type: string
+                  example: invalid time
+                id:
+                  type: string
+                  example: invalid id
+    AddIncidentDataErrorResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: error
+        message:
+          type: string
+          example: unable to complete request
+    GetOneIncidentSuccessResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+        data:
+          type: object
+          properties:
+            image:
+              type: string
+              example: http://www/image/url
+            meta_data:
+              type: object
+              properties:
+                location:
+                  type: string
+                  example: latitude, longitude
+                time:
+                  type: string
+                  example: 10-09-19 08:55:46
+    GetOneIncidentFailResponse:
+          type: object
+          properties:
+            status:
+              type: string
+              example: fail
+            data:
+              type: object
+              properties:
+                id:
+                  type: string
+                  example: invalid id
+    GetOneIncidentErrorResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: error
+        message:
+          type: string
+          example: unable to complete request
