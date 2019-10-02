@@ -232,12 +232,9 @@ components:
             status:
               type: string
               example: fail
-            data:
-              type: object
-              properties:
-                image: #optional
-                  type: string
-                  example: file size too big
+            message:
+              type: string
+              example: file size too big
     CreateIncidentErrorResponse:
       type: object
       properties:
@@ -306,18 +303,9 @@ components:
             status:
               type: string
               example: fail
-            data:
-              type: object
-              properties:
-                location: #optional
-                  type: string
-                  example: invalid location
-                time: #optional
-                  type: string
-                  example: invalid time
-                id:
-                  type: string
-                  example: invalid id
+            messgae:
+              type: string
+              example: invalid location / invalid time / invalid id
     AddIncidentDataErrorResponse:
       type: object
       properties:
@@ -354,12 +342,9 @@ components:
             status:
               type: string
               example: fail
-            data:
-              type: object
-              properties:
-                id:
-                  type: string
-                  example: invalid id
+            message:
+              type: string
+              example: invalid id
     GetOneIncidentErrorResponse:
       type: object
       properties:
