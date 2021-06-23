@@ -21,6 +21,11 @@ tags:
     externalDocs:
       description: ""
       url: ""
+  - name: location
+    description: ""
+    externalDocs:
+      description: ""
+      url: ""
 security:
   - bearerAuth: []
 paths:
